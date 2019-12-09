@@ -12,7 +12,8 @@
   <div class="column col-md-4">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Patient Info</h5>
+        <h3 class="card-title">Patient Info</h3>
+        <hr>
         <p class="card-text"><strong>Name: </strong> {{ patient.first_name }} {{ patient.last_name }}<p>
         <p class="card-text"><strong>Address: </strong> {{ patient.address }}</p>
         <p class="card-text"><strong>City: </strong> {{ patient.city }}</p>
@@ -27,8 +28,9 @@
   <div class="column col-md-4">
     <div class="card">
       <div class="card-body">
-        <div class="card-title"><h3>Medications</h3></div>
+        <div class="card-title"><h3>Current Medications</h3></div>
         {% for medication in medications %}
+          <hr>
           <p class="card-text">{{ medication.name }}</p>
         {% endfor %}
       </div>
@@ -39,8 +41,9 @@
       <div class="card-body">
         <div class="card-title"><h3>Allergies</h3></div>
         {% for allergy in allergies %}
-          <p class="card-text">{{ allergy.description }}</p>
-          <p class="card-text">{{ allergy.reaction }}</p>
+          <hr>
+          <p class="card-text"><strong>RX Norm Code:</strong> {{ allergy.rxnorm }}</p>
+          <p class="card-text"><strong>Reaction: </strong>{{ allergy.reaction }}</p>
         {% endfor %}
       </div>
     </div>

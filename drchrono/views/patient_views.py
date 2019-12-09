@@ -28,7 +28,12 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
         allergies_api = AllergyEndpoint(self.request.session["access_token"])
         allergies = allergies_api.list(params={"patient": kwargs["patient"].api_id})
         medications_api = MedicationEndpoint(self.request.session["access_token"])
-        medications = medications_api.list(params={"patient": kwargs["patient"].api_id})
+        medications = medications_api.list(
+            params={
+                "patient": kwargs["patient"].api_id,
+                "status": "active"
+            }
+        )
         kwargs["allergies"] = allergies
         kwargs["medications"] = medications
         return kwargs
