@@ -54,6 +54,7 @@ def webhook_view(request):
         elif event_type == "PATIENT_CREATE":
             new_patient = json.loads(request.body)["object"]
             Patient.objects.create(
+                api_id=new_patient["id"],
                 doctor_id=new_patient["doctor"],
                 first_name=new_patient["first_name"],
                 middle_name=new_patient["middle_name"],
