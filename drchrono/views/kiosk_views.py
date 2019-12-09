@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.views.generic import FormView, TemplateView, UpdateView
 from social_django.models import UserSocialAuth
 
-from drchrono.endpoints import AppointmentEndpoint, PatientEndpoint
+from drchrono.endpoints import APIException, AppointmentEndpoint, PatientEndpoint
 from drchrono.forms import PatientSignInForm, PatientDemographicsForm
 from drchrono.models import Appointment, Patient
 
@@ -68,14 +68,28 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         patients_api = PatientEndpoint(self.request.session["access_token"])
-        patients_api.update(self.request.session["patient_id"], form.cleaned_data)
+        try:
+            patients_api.update(self.request.session["patient_id"], form.cleaned_data)
+        except APIException:
+            return render(
+                self.request,
+                "patient_checkin.html",
+                {"error": "There was an error updating your information", "form": form},
+            )
         appointments_api = AppointmentEndpoint(self.request.session["access_token"])
         for appointment_id in self.request.session["appointment_ids"]:
+            try:
+                appointments_api.update(appointment_id, {"status": "Checked In"})
+            except APIException:
+                return render(
+                    self.request,
+                    "patient_checkin.html",
+                    {"error": "There was an error checking in to your appointment", "form": form},
+                )
             appointment = Appointment.objects.get(api_id=appointment_id)
             appointment.status = "Checked In"
             appointment.check_in_time = timezone.now()
             appointment.save()
-            appointments_api.update(appointment_id, {"status": "Checked In"})
         return super(PatientDemographicsView, self).form_valid(form)
 
     def get_object(self):

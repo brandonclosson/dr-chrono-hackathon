@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import DetailView, TemplateView, View
 
-from drchrono.endpoints import AppointmentEndpoint
+from drchrono.endpoints import AppointmentEndpoint, APIException
 from drchrono.models import Appointment, Doctor
 from drchrono.utils import get_average_wait_time
 
@@ -59,12 +59,15 @@ class UpdateAppointmentView(View):
         if self.request.is_ajax():
             status = self.request.POST.get("status")
             appointment_id = self.request.POST.get("id")
+            try:
+                appointment_api = AppointmentEndpoint(self.request.session["access_token"])
+                appointment_api.update(appointment.api_id, {"status": status})
+            except APIException:
+                return JsonResponse({"status": "API failure"}, status=500)
             appointment = Appointment.objects.get(pk=appointment_id)
             if status == "In Room":
                 appointment.final_wait_time = appointment.wait_time
             appointment.status = status
             appointment.save()
-            appointment_api = AppointmentEndpoint(self.request.session["access_token"])
-            appointment_api.update(appointment.api_id, {"status": status})
 
             return JsonResponse({"status": "success"})
