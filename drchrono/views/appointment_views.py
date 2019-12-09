@@ -30,7 +30,7 @@ class AppointmentListView(LoginRequiredMixin, TemplateView):
 class AppointmentListAjaxView(View):
     def get(self, request):
         if self.request.is_ajax():
-            appointment_type = self.request.GET.get('appointment_type')
+            appointment_type = self.request.GET.get("appointment_type")
             if appointment_type == "upcoming":
                 appointments = Appointment.upcoming.all()
                 template = "appointment_upcoming_list.html"
@@ -60,7 +60,9 @@ class UpdateAppointmentView(View):
             status = self.request.POST.get("status")
             appointment_id = self.request.POST.get("id")
             try:
-                appointment_api = AppointmentEndpoint(self.request.session["access_token"])
+                appointment_api = AppointmentEndpoint(
+                    self.request.session["access_token"]
+                )
                 appointment_api.update(appointment.api_id, {"status": status})
             except APIException:
                 return JsonResponse({"status": "API failure"}, status=500)

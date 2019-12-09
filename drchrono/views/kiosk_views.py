@@ -84,7 +84,10 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
                 return render(
                     self.request,
                     "patient_checkin.html",
-                    {"error": "There was an error checking in to your appointment", "form": form},
+                    {
+                        "error": "There was an error checking in to your appointment",
+                        "form": form,
+                    },
                 )
             appointment = Appointment.objects.get(api_id=appointment_id)
             appointment.status = "Checked In"
@@ -108,6 +111,7 @@ class PatientCheckInSuccessView(LoginRequiredMixin, TemplateView):
     """
     Patient Check In Success message on kiosk
     """
+
     template_name = "patient_checkin_success.html"
 
     def get_context_data(self, **kwargs):
