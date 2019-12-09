@@ -20,9 +20,9 @@
           {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
         </a>
       </td>
-      <td>{{ appointment.scheduled_time }}</td>
+      <td>{{ appointment.scheduled_time|time }}</td>
       <td>{{ appointment.status }}</td>
-      <td>{{ appointment.check_in_time }}</td>
+      <td>{{ appointment.check_in_time|time }}</td>
       <td>{{ appointment.wait_time }} minutes</td>
       <td>{{ appointment.exam_room }}</td>
       <td>{{ appointment.reason }}</td>
