@@ -1,0 +1,32 @@
+{% if appointments %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Patient</th>
+      <th scope="col">Scheduled Time</th>
+      <th scope="col">Status</th>
+      <th scope="col">Check In Time</th>
+      <th scope="col">Wait Time</th>
+      <th scope="col">Exam Room</th>
+      <th scope="col">Reason for Visit</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for appointment in appointments %}
+    <tr>
+      <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+      <td>{{ appointment.scheduled_time }}</td>
+      <td>{{ appointment.status }}</td>
+      <td>{{ appointment.check_in_time }}</td>
+      <td>{{ appointment.wait_time }} minutes</td>
+      <td>{{ appointment.exam_room }}</td>
+      <td>{{ appointment.reason }}</td>
+      <td><button class="btn btn-primary update-status-button" data-id="{{ appointment.pk }}" data-status="Complete">Finish</button></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No appointments.</p>
+{% endif %}

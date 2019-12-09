@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row my-4">
+    <div class="column col-md-12">
+        <h1>{{ doctor.first_name }} {{ doctor.last_name }}</h1>
+    </div>
+</div>
+<div class="row my-4">
+    <div class="column col-md-12">
+        <a href="{% url 'welcome' %}"><button class="btn btn-primary">Back to Dashboard</button></a>
+    </div>
+</div>
+<div class="row pb-4">
+    <div class="column col-md-6">
+      <h2>Today's Appointments</h2>
+    </div>
+    <div class="column col-md-6 text-right">
+      <h2 id="now"></h2>
+    </div>
+</div>
+<div class="row pb-4 text-center">
+  <div class="col-md-12">
+    <div id="avg_wait_time"></div>
+  </div>
+</div>
+<div class="row appointments mb-2">
+    <div class="column col-md-12">
+        <h4 class="py-1">Current</h4>
+        <div id="current_appointments"></div>
+    </div>
+</div>
+<div class="row appointments mb-2">
+    <div class="column col-md-12">
+        <h4 class="py-1">Upcoming</h4>
+        <div id="upcoming_appointments"></div>
+    </div>
+</div>
+<div class="row appointments mb-2">
+    <div class="column col-md-12">
+        <h4 class="py-1">Finished</h4>
+        <div id="complete_appointments"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_scripts %}
+<script>
+  $(document).ready(function() {
+    refreshAppointments();
+    window.setInterval(refreshAppointments, 10000);
+  });
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+
+  function getAverageWaitTime() {
+    $.ajax({
+      type: "GET",
+      url: "{% url 'average_wait_time' %}",
+      success: function(data) {
+        $("#avg_wait_time").html(data);
+      }
+    });
+  }
+
+  function getUpcomingAppointments() {
+    $.ajax({
+      type: "GET",
+      url: "{% url 'upcoming_appointments' %}",
+      success: function(data) {
+        $("#upcoming_appointments").html(data);
+      }
+    });
+  }
+
+  function getCompleteAppointments() {
+    $.ajax({
+      type: "GET",
+      url: "{% url 'complete_appointments' %}",
+      success: function(data) {
+        $("#complete_appointments").html(data);
+      }
+    });
+  }
+
+  function getCurrentAppointments() {
+    $.ajax({
+      type: "GET",
+      url: "{% url 'current_appointments' %}",
+      success: function(data) {
+        $("#current_appointments").html(data);
+      }
+    });
+  }
+
+  function updateAppointmentStatus(id, status) {
+    var csrftoken = getCookie('csrftoken');
+    console.log(id);
+    console.log(status);
+    $.ajax({
+      type: "POST",
+      url: "{% url 'update_appointment' %}",
+      data: {
+        status: status,
+        id: id,
+        csrfmiddlewaretoken: csrftoken
+      },
+      success: function(data) {
+        refreshAppointments();
+      }
+    });
+  }
+
+  function refreshAppointments() {
+    getUpcomingAppointments();
+    getCompleteAppointments();
+    getCurrentAppointments();
+    getAverageWaitTime();
+    $("#now").text(new Date().toLocaleTimeString());
+  }
+
+  $('.appointments').on('click', 'button.update-status-button', function(e) {
+    e.preventDefault();
+    updateAppointmentStatus($(this).data('id'), $(this).data('status'));
+  });
+</script>
+{% endblock %}

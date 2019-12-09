@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row">
+    <div class="column col-md-12">
+        <h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="column col-md-12">
+        <h2>Patient List</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="column col-md-12">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">First</th>
+              <th scope="col">Middle</th>
+              <th scope="col">Last</th>
+              <th scpoe="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for patient in patients %}
+            <tr>
+              <td>{{ patient.first_name }}</td>
+              <td>{% if patient.middle_name %}{{ patient.middle_name }}{% else %}{% endif %}</td>
+              <td>{{ patient.last_name }}</td>
+              <td><a href="{% url 'patient_detail' pk=patient.pk %}">View Details</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

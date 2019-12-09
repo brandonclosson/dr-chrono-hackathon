@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row p-3">
+    <div class="column col-md-12">
+        <h2>Patient Detail: {{ patient.first_name }} {{ patient.last_name }}</h2>
+    </div>
+</div>
+<div class="row p-3">
+  <div class="column col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Patient Info</h5>
+        <p class="card-text"><strong>Name: </strong> {{ patient.first_name }} {{ patient.last_name }}<p>
+        <p class="card-text"><strong>Address: </strong> {{ patient.address }}</p>
+        <p class="card-text"><strong>City: </strong> {{ patient.city }}</p>
+        <p class="card-text"><strong>State: </strong> {{ patient.state }}</p>
+        <p class="card-text"><strong>ZIP Code: </strong> {{ patient.zip_code }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="column col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title"><h3>Medications</h3></div>
+        {% for medication in medications %}
+          <p class="card-text">{{ medication.name }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="column col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title"><h3>Allergies</h3></div>
+        {% for allergy in allergies %}
+          <p class="card-text">{{ allergy.description }}</p>
+          <p class="card-text">{{ allergy.reaction }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="row">
+    <div class="column col-md-12">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">First</th>
+              <th scope="col">Middle</th>
+              <th scope="col">Last</th>
+              <th scpoe="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for patient in patients %}
+            <tr>
+              <td>{{ patient.first_name }}</td>
+              <td>{% if patient.middle_name %}{{ patient.middle_name }}{% else %}{% endif %}</td>
+              <td>{{ patient.last_name }}</td>
+              <td><a>View Details</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div> -->
+{% endblock %}

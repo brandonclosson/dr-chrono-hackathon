@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block body %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <hr class="mt-0 mb-4">
+        <h1>Thanks for Checking In!</h1>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    window.setTimeout( function(){
+         window.location = "/kiosk/";
+     }, 10000);
+</script>
+{% endblock %}

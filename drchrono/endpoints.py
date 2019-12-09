@@ -1,24 +1,26 @@
 import requests
 import logging
 
-
-class APIException(Exception): pass
-
-
-class Forbidden(APIException): pass
+from drchrono.models import Appointment, Doctor, Patient
 
 
-class NotFound(APIException): pass
+class APIException(Exception):
+    pass
 
 
-class Conflict(APIException): pass
+class Forbidden(APIException):
+    pass
 
 
-ERROR_CODES = {
-    403: Forbidden,
-    404: NotFound,
-    409: Conflict,
-}
+class NotFound(APIException):
+    pass
+
+
+class Conflict(APIException):
+    pass
+
+
+ERROR_CODES = {403: Forbidden, 404: NotFound, 409: Conflict}
 
 
 # TODO: this API abstraction is included for your convenience. If you don't like it, feel free to change it.
@@ -38,8 +40,9 @@ class BaseEndpoint(object):
 
     Subclasses should implement a specific endpoint.
     """
-    BASE_URL = 'https://drchrono.com/api/'
-    endpoint = ''
+
+    BASE_URL = "https://drchrono.com/api/"
+    endpoint = ""
 
     def __init__(self, access_token=None):
         """
@@ -63,18 +66,17 @@ class BaseEndpoint(object):
 
         Modifies kwargs in place. Returns None.
         """
-        kwargs['headers'] = kwargs.get('headers', {})
-        kwargs['headers'].update({
-            'Authorization': 'Bearer {}'.format(self.access_token),
-
-        })
+        kwargs["headers"] = kwargs.get("headers", {})
+        kwargs["headers"].update(
+            {"Authorization": "Bearer {}".format(self.access_token)}
+        )
 
     def _json_or_exception(self, response):
         """
         returns the JSON content or raises an exception, based on what kind of response (2XX/4XX) we get
         """
         if response.ok:
-            if response.status_code != 204: # No Content
+            if response.status_code != 204:  # No Content
                 return response.json()
         else:
             exe = ERROR_CODES.get(response.status_code, APIException)
@@ -82,7 +84,7 @@ class BaseEndpoint(object):
 
     def _request(self, method, *args, **kwargs):
         # dirty, universal way to use the requests library directly for debugging
-        url = self._url(kwargs.pop(id, ''))
+        url = self._url(kwargs.pop(id, ""))
         self._auth_headers(kwargs)
         return getattr(requests, method)(url, *args, **kwargs)
 
@@ -97,11 +99,13 @@ class BaseEndpoint(object):
         # Response will be one page out of a paginated results list
         response = requests.get(url, params=params, **kwargs)
         if response.ok:
-            self.logger.debug("list got page {}".format('url'))
+            self.logger.debug("list got page {}".format("url"))
             while url:
                 data = response.json()
-                url = data['next']  # Same as the resource URL, but with the page query parameter present
-                for result in data['results']:
+                url = data[
+                    "next"
+                ]  # Same as the resource URL, but with the page query parameter present
+                for result in data["results"]:
                     yield result
         else:
             exe = ERROR_CODES.get(response.status_code, APIException)
@@ -180,6 +184,40 @@ class BaseEndpoint(object):
 class PatientEndpoint(BaseEndpoint):
     endpoint = "patients"
 
+    def list(self, params=None, date=None, start=None, end=None, **kwargs):
+        """
+        List appointments on a given date, or between two dates
+        """
+        # Just parameter parsing & checking
+        params = params or {}
+        if "doctor" not in params:
+            raise Exception("Must provide doctor")
+        return super(PatientEndpoint, self).list(params, **kwargs)
+
+    def save_patients(self, doctor_id):
+        patients = self.list(params={"doctor": doctor_id})
+        saved_patients = []
+        for patient in patients:
+            patient, created = Patient.objects.update_or_create(
+                api_id=patient["id"],
+                defaults={
+                    "doctor_id": patient["doctor"],
+                    "first_name": patient["first_name"],
+                    "middle_name": patient["middle_name"],
+                    "last_name": patient["last_name"],
+                    "date_of_first_appointment": patient["date_of_first_appointment"],
+                    "address": patient["address"],
+                    "city": patient["city"],
+                    "state": patient["state"],
+                    "zip_code": patient["zip_code"],
+                    "gender": patient["gender"],
+                    "ethnicity": patient["ethnicity"],
+                    "social_security_number": patient["social_security_number"],
+                },
+            )
+            saved_patients.append(patient)
+        return saved_patients
+
 
 class AppointmentEndpoint(BaseEndpoint):
     endpoint = "appointments"
@@ -193,12 +231,31 @@ class AppointmentEndpoint(BaseEndpoint):
         params = params or {}
         if start and end:
             date_range = "{}/{}".format(start, end)
-            params['date_range'] = date_range
+            params["date_range"] = date_range
         elif date:
-            params['date'] = date
-        if 'date' not in params and 'date_range' not in params:
+            params["date"] = date
+        if "date" not in params and "date_range" not in params:
             raise Exception("Must provide either start & end, or date argument")
         return super(AppointmentEndpoint, self).list(params, **kwargs)
+
+    def save_appointments(self, doctor_id, date):
+        appointments = self.list(params={"doctor": doctor_id}, date=date)
+        saved_appointments = []
+        for appointment in appointments:
+            appointment, created = Appointment.objects.update_or_create(
+                api_id=appointment["id"],
+                defaults={
+                    "doctor_id": appointment["doctor"],
+                    "patient_id": appointment["patient"],
+                    "exam_room": appointment["exam_room"],
+                    "is_walk_in": appointment["is_walk_in"],
+                    "scheduled_time": appointment["scheduled_time"],
+                    "status": appointment["status"],
+                    "reason": appointment["reason"],
+                },
+            )
+            saved_appointments.append(appointment)
+        return saved_appointments
 
 
 class DoctorEndpoint(BaseEndpoint):
@@ -213,6 +270,39 @@ class DoctorEndpoint(BaseEndpoint):
     def delete(self, id, **kwargs):
         raise NotImplementedError("the API does not allow deleteing doctors")
 
+    def save_doctor(self):
+        doctor = next(self.list())
+        doctor, created = Doctor.objects.get_or_create(
+            first_name=doctor["first_name"],
+            last_name=doctor["last_name"],
+            api_id=doctor["id"],
+        )
+        return doctor
 
-class AppointmentProfileEndpoint(BaseEndpoint):
-    endpoint = "appointment_profiles"
+
+class MedicationEndpoint(BaseEndpoint):
+    endpoint = "medications"
+
+    def list(self, params=None, date=None, start=None, end=None, **kwargs):
+        """
+        List appointments on a given date, or between two dates
+        """
+        # Just parameter parsing & checking
+        params = params or {}
+        if "patient" not in params:
+            raise Exception("Must provide patient")
+        return super(MedicationEndpoint, self).list(params, **kwargs)
+
+
+class AllergyEndpoint(BaseEndpoint):
+    endpoint = "allergies"
+
+    def list(self, params=None, date=None, start=None, end=None, **kwargs):
+        """
+        List appointments on a given date, or between two dates
+        """
+        # Just parameter parsing & checking
+        params = params or {}
+        if "patient" not in params:
+            raise Exception("Must provide patient")
+        return super(AllergyEndpoint, self).list(params, **kwargs)

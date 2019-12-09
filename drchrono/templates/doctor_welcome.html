@@ -1,11 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome to drchrono</title>
-</head>
-<body>
-<h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
-{{ doctor }}
-</body>
-</html>
+{% extends 'base.html' %}
+{% block body %}
+<div class="row py-4">
+    <div class="column col-md-12">
+        <h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
+    </div>
+</div>
+<div class="row py-2">
+    <div class="column col-md-12">
+        <a href="{% url 'appointments' %}" class="btn btn-primary btn-lg btn-block">Appointments</a>
+    </div>
+</div>
+<div class="row py-2">
+    <div class="column col-md-12">
+        <a href="{% url 'patients' %}" class="btn btn-primary btn-lg btn-block">Patients</a>
+    </div>
+</div>
+<div class="row py-2">
+    <div class="column col-md-12">
+        <a href="{% url 'kiosk' %}" class="btn btn-primary btn-lg btn-block">Kiosk</a>
+    </div>
+</div>
+{% endblock %}
