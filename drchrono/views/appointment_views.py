@@ -59,17 +59,19 @@ class UpdateAppointmentView(View):
         if self.request.is_ajax():
             status = self.request.POST.get("status")
             appointment_id = self.request.POST.get("id")
+            notes = self.request.POST.get("notes", "")
             try:
                 appointment_api = AppointmentEndpoint(
                     self.request.session["access_token"]
                 )
-                appointment_api.update(appointment_id, {"status": status})
+                appointment_api.update(appointment_id, {"status": status, "notes": notes})
             except APIException:
                 return JsonResponse({"status": "API failure"}, status=500)
             appointment = Appointment.objects.get(api_id=appointment_id)
             if status == "In Room":
                 appointment.final_wait_time = appointment.wait_time
             appointment.status = status
+            appointment.notes = notes
             appointment.save()
 
             return JsonResponse({"status": "success"})

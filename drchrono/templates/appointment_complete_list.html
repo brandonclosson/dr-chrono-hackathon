@@ -9,6 +9,7 @@
       <th scope="col">Wait Time</th>
       <th scope="col">Exam Room</th>
       <th scope="col">Reason for Visit</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -25,7 +26,30 @@
       <td>{{ appointment.wait_time }} minutes</td>
       <td>{{ appointment.exam_room }}</td>
       <td>{{ appointment.reason }}</td>
+      <td>
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#appointment_notes_{{ appointment.api_id }}">
+          View Notes
+        </button>
+      </td>
     </tr>
+    <div class="modal" id="appointment_notes_{{ appointment.api_id }}" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Appointment Notes</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>{{ appointment.notes }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endfor %}
   </tbody>
 </table>

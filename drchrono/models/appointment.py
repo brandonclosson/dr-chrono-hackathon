@@ -37,6 +37,7 @@ class Appointment(models.Model):
     reason = models.CharField(max_length=500)
     check_in_time = models.DateTimeField(null=True)
     final_wait_time = models.IntegerField(null=True)
+    notes = models.TextField(blank=True)
 
     complete = AppointmentCompleteManager()
     current = AppointmentCurrentManager()

@@ -40,6 +40,31 @@
         <div id="other_appointments"></div>
     </div>
 </div>
+<div class="modal fade" id="complete_appointment_form" tabindex="-1" role="dialog" aria-labelledby="Complete Appointment Form" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Complete Appointment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="appointment_notes">Notes</label>
+            <textarea id="appointment_notes" class="form-control" placeholder="Enter appointment notes (optional)"></textarea>
+          </div>
+          <input type="hidden" id="completed_appointment_pk"></input>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="complete_appointment_finished">Complete</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block js_scripts %}
@@ -85,18 +110,20 @@
     });
   }
 
-  function updateAppointmentStatus(id, status) {
+  function updateAppointmentStatus(id, status, notes) {
     var csrftoken = getCookie('csrftoken');
-    console.log(id);
-    console.log(status);
+    var data = {
+      status: status,
+      id: id,
+      csrfmiddlewaretoken: csrftoken
+    }
+    if (notes) {
+      data.notes = notes;
+    }
     $.ajax({
       type: "POST",
       url: "{% url 'update_appointment' %}",
-      data: {
-        status: status,
-        id: id,
-        csrfmiddlewaretoken: csrftoken
-      },
+      data: data,
       success: function(data) {
         refreshAppointments();
       }
@@ -114,7 +141,20 @@
 
   $('.appointments').on('click', 'button.update-status-button', function(e) {
     e.preventDefault();
-    updateAppointmentStatus($(this).data('id'), $(this).data('status'));
+    updateAppointmentStatus($(this).data('id'), $(this).data('status'), undefined);
+  });
+
+  $('.appointments').on('click', 'button#complete_appointment_button', function(e) {
+    e.preventDefault();
+    $('#completed_appointment_pk').val($(this).data('id'));
+    $('#complete_appointment_form').modal();
+  });
+
+  $('#complete_appointment_finished').on('click', function(e) {
+    e.preventDefault();
+    updateAppointmentStatus($('#completed_appointment_pk').val(), 'Complete', $('#appointment_notes').val());
+    $('#appointment_notes').val() = "";
+    $('complete_appointment_form').modal('hide');
   });
 </script>
 {% endblock %}
