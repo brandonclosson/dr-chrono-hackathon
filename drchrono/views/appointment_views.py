@@ -38,7 +38,7 @@ class AppointmentListAjaxView(View):
                 appointments = Appointment.complete.all()
                 template = "appointment_complete_list.html"
             elif appointment_type == "current":
-                appointments = Appointment.complete.all()
+                appointments = Appointment.current.all()
                 template = "appointment_current_list.html"
             elif appointment_type == "other":
                 appointments = Appointment.other.all()
@@ -63,10 +63,10 @@ class UpdateAppointmentView(View):
                 appointment_api = AppointmentEndpoint(
                     self.request.session["access_token"]
                 )
-                appointment_api.update(appointment.api_id, {"status": status})
+                appointment_api.update(appointment_id, {"status": status})
             except APIException:
                 return JsonResponse({"status": "API failure"}, status=500)
-            appointment = Appointment.objects.get(pk=appointment_id)
+            appointment = Appointment.objects.get(api_id=appointment_id)
             if status == "In Room":
                 appointment.final_wait_time = appointment.wait_time
             appointment.status = status

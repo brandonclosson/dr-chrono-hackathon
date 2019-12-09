@@ -78,7 +78,7 @@ class AppointmentOtherManager(models.Manager):
                     "Complete",
                     "",
                     "In Room",
-                    "Arrive",
+                    "Arrived",
                     "Checked In",
                     "In Session",
                 )

@@ -28,11 +28,11 @@
       <td>{% if appointment.wait_time %}{{ appointment.wait_time }} minutes{% endif %}</td>
       <td>
         {% if appointment.status == 'Arrived' %}
-          <button class="btn btn-primary update-status-button btn-sm" data-id="{{ appointment.pk }}" data-status="In Room">
+          <button class="btn btn-primary update-status-button btn-sm" data-id="{{ appointment.api_id }}" data-status="In Room">
             See Now
           </button>
         {% else %}
-          <button class="btn btn-primary update-status-button btn-sm" data-id="{{ appointment.pk }}" data-status="No Show">
+          <button class="btn btn-primary update-status-button btn-sm" data-id="{{ appointment.api_id }}" data-status="No Show">
             No Show
           </button>
         {% endif %}

@@ -85,6 +85,24 @@
     });
   }
 
+  function updateAppointmentStatus(id, status) {
+    var csrftoken = getCookie('csrftoken');
+    console.log(id);
+    console.log(status);
+    $.ajax({
+      type: "POST",
+      url: "{% url 'update_appointment' %}",
+      data: {
+        status: status,
+        id: id,
+        csrfmiddlewaretoken: csrftoken
+      },
+      success: function(data) {
+        refreshAppointments();
+      }
+    });
+  }
+
   function refreshAppointments() {
     getAppointments("upcoming", "#upcoming_appointments");
     getAppointments("completed", "#complete_appointments");
