@@ -4,6 +4,7 @@ from django.utils import timezone
 from drchrono.managers import (
     AppointmentCompleteManager,
     AppointmentCurrentManager,
+    AppointmentOtherManager,
     AppointmentTodayManager,
     AppointmentUpcomingManager,
 )
@@ -39,6 +40,7 @@ class Appointment(models.Model):
 
     complete = AppointmentCompleteManager()
     current = AppointmentCurrentManager()
+    other = AppointmentOtherManager()
     today = AppointmentTodayManager()
     upcoming = AppointmentUpcomingManager()
     objects = models.Manager()
@@ -47,10 +49,6 @@ class Appointment(models.Model):
     def patient(self):
         patient = Patient.objects.get(api_id=self.patient_id)
         return patient
-
-    @property
-    def scheduled_hour(self):
-        return self.scheduled_time.split("T")[1]
 
     @property
     def wait_time(self):

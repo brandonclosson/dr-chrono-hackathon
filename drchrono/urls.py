@@ -17,19 +17,9 @@ urlpatterns = [
         name="average_wait_time",
     ),
     url(
-        r"^completed-appointments/",
-        views.CompletedAppointmentListView.as_view(),
-        name="complete_appointments",
-    ),
-    url(
-        r"^current-appointments/",
-        views.CurrentAppointmentListView.as_view(),
-        name="current_appointments",
-    ),
-    url(
-        r"^upcoming-appointments/",
-        views.UpcomingAppointmentListView.as_view(),
-        name="upcoming_appointments",
+        r"^appointments-by-type/",
+        views.AppointmentListAjaxView.as_view(),
+        name="appointments_by_type",
     ),
     url(
         r"^update-appointment/",

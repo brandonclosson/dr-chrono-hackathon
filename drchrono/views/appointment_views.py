@@ -27,25 +27,24 @@ class AppointmentListView(LoginRequiredMixin, TemplateView):
         return kwargs
 
 
-class UpcomingAppointmentListView(View):
+class AppointmentListAjaxView(View):
     def get(self, request):
-        appointments = Appointment.upcoming.all()
-        context = {"appointments": appointments}
-        return render(request, "appointment_upcoming_list.html", context)
-
-
-class CompletedAppointmentListView(View):
-    def get(self, request):
-        appointments = Appointment.complete.all()
-        context = {"appointments": appointments}
-        return render(request, "appointment_complete_list.html", context)
-
-
-class CurrentAppointmentListView(View):
-    def get(self, request):
-        appointments = Appointment.current.all()
-        context = {"appointments": appointments}
-        return render(request, "appointment_current_list.html", context)
+        if self.request.is_ajax():
+            appointment_type = self.request.GET.get('appointment_type')
+            if appointment_type == "upcoming":
+                appointments = Appointment.upcoming.all()
+                template = "appointment_upcoming_list.html"
+            elif appointment_type == "completed":
+                appointments = Appointment.complete.all()
+                template = "appointment_complete_list.html"
+            elif appointment_type == "current":
+                appointments = Appointment.complete.all()
+                template = "appointment_current_list.html"
+            elif appointment_type == "other":
+                appointments = Appointment.other.all()
+                template = "appointment_other_list.html"
+            context = {"appointments": appointments}
+            return render(request, template, context)
 
 
 class AverageWaitTimeView(View):
@@ -57,14 +56,15 @@ class AverageWaitTimeView(View):
 
 class UpdateAppointmentView(View):
     def post(self, request):
-        status = self.request.POST.get("status")
-        appointment_id = self.request.POST.get("id")
-        appointment = Appointment.objects.get(pk=appointment_id)
-        if status == "In Room":
-            appointment.final_wait_time = appointment.wait_time
-        appointment.status = status
-        appointment.save()
-        appointment_api = AppointmentEndpoint(self.request.session["access_token"])
-        appointment_api.update(appointment.api_id, {"status": status})
+        if self.request.is_ajax():
+            status = self.request.POST.get("status")
+            appointment_id = self.request.POST.get("id")
+            appointment = Appointment.objects.get(pk=appointment_id)
+            if status == "In Room":
+                appointment.final_wait_time = appointment.wait_time
+            appointment.status = status
+            appointment.save()
+            appointment_api = AppointmentEndpoint(self.request.session["access_token"])
+            appointment_api.update(appointment.api_id, {"status": status})
 
-        return JsonResponse({"status": "success"})
+            return JsonResponse({"status": "success"})

@@ -41,6 +41,12 @@
         <div id="complete_appointments"></div>
     </div>
 </div>
+<div class="row appointments mb-2">
+    <div class="column col-md-12">
+        <h4 class="py-1">Other Appointments</h4>
+        <div id="other_appointments"></div>
+    </div>
+</div>
 {% endblock %}
 
 {% block js_scripts %}
@@ -76,58 +82,21 @@
     });
   }
 
-  function getUpcomingAppointments() {
+  function getAppointments(appointment_type, container_id) {
     $.ajax({
       type: "GET",
-      url: "{% url 'upcoming_appointments' %}",
+      url: "{% url 'appointments_by_type' %}?appointment_type=" + appointment_type,
       success: function(data) {
-        $("#upcoming_appointments").html(data);
-      }
-    });
-  }
-
-  function getCompleteAppointments() {
-    $.ajax({
-      type: "GET",
-      url: "{% url 'complete_appointments' %}",
-      success: function(data) {
-        $("#complete_appointments").html(data);
-      }
-    });
-  }
-
-  function getCurrentAppointments() {
-    $.ajax({
-      type: "GET",
-      url: "{% url 'current_appointments' %}",
-      success: function(data) {
-        $("#current_appointments").html(data);
-      }
-    });
-  }
-
-  function updateAppointmentStatus(id, status) {
-    var csrftoken = getCookie('csrftoken');
-    console.log(id);
-    console.log(status);
-    $.ajax({
-      type: "POST",
-      url: "{% url 'update_appointment' %}",
-      data: {
-        status: status,
-        id: id,
-        csrfmiddlewaretoken: csrftoken
-      },
-      success: function(data) {
-        refreshAppointments();
+        $(container_id).html(data);
       }
     });
   }
 
   function refreshAppointments() {
-    getUpcomingAppointments();
-    getCompleteAppointments();
-    getCurrentAppointments();
+    getAppointments("upcoming", "#upcoming_appointments");
+    getAppointments("completed", "#complete_appointments");
+    getAppointments("current", "#current_appointments");
+    getAppointments("other", "#other_appointments");
     getAverageWaitTime();
     $("#now").text(new Date().toLocaleTimeString());
   }

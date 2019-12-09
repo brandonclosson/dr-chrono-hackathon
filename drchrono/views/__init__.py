@@ -1,8 +1,6 @@
 from appointment_views import (
     AppointmentListView,
-    CurrentAppointmentListView,
-    CompletedAppointmentListView,
-    UpcomingAppointmentListView,
+    AppointmentListAjaxView,
     UpdateAppointmentView,
     AverageWaitTimeView,
 )

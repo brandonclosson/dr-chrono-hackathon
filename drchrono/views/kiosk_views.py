@@ -58,7 +58,7 @@ class PatientCheckInView(LoginRequiredMixin, FormView):
 
 class PatientDemographicsView(LoginRequiredMixin, UpdateView):
     """
-    Patient Sign In screen on kiosk.
+    Patient demographics update screen on kiosk
     """
 
     model_class = Patient
@@ -84,8 +84,6 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(PatientDemographicsView, self).get_context_data(**kwargs)
-        # Hit the API using one of the endpoints just to prove that we can
-        # If this works, then your oAuth setup is working correctly.
         kwargs["appointments"] = Appointment.objects.filter(
             api_id__in=self.request.session["appointment_ids"]
         )
@@ -93,4 +91,14 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
 
 
 class PatientCheckInSuccessView(LoginRequiredMixin, TemplateView):
+    """
+    Patient Check In Success message on kiosk
+    """
     template_name = "patient_checkin_success.html"
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(PatientCheckInSuccessView, self).get_context_data(**kwargs)
+        kwargs["appointments"] = Appointment.objects.filter(
+            api_id__in=self.request.session["appointment_ids"]
+        )
+        return kwargs

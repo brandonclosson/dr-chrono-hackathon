@@ -11,8 +11,6 @@ class PatientListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(PatientListView, self).get_context_data(**kwargs)
-        # Hit the API using one of the endpoints just to prove that we can
-        # If this works, then your oAuth setup is working correctly.
         doctor = Doctor.objects.first()
         patients = Patient.objects.filter(doctor_id=doctor.api_id).order_by("last_name")
         kwargs["doctor"] = doctor
@@ -27,8 +25,6 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(PatientDetailView, self).get_context_data(**kwargs)
-        # Hit the API using one of the endpoints just to prove that we can
-        # If this works, then your oAuth setup is working correctly.
         allergies_api = AllergyEndpoint(self.request.session["access_token"])
         allergies = allergies_api.list(params={"patient": kwargs["patient"].api_id})
         medications_api = MedicationEndpoint(self.request.session["access_token"])

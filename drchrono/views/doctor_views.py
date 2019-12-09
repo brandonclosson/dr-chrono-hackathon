@@ -52,8 +52,6 @@ class DoctorWelcome(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(DoctorWelcome, self).get_context_data(**kwargs)
-        # Hit the API using one of the endpoints just to prove that we can
-        # If this works, then your oAuth setup is working correctly.
         doctor = self.make_api_request()
         appointment_details = self.get_today_appointments(doctor.api_id)
         patient_details = self.get_doctor_patients(doctor.api_id)
