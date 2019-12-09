@@ -11,6 +11,7 @@ class Patient(models.Model):
     middle_name = models.CharField(max_length=500, null=True)
     last_name = models.CharField(max_length=500)
     date_of_first_appointment = models.DateField(null=True)
+    date_of_birth = models.DateField(null=True)
     address = models.CharField(max_length=500)
     city = models.CharField(max_length=500)
     state = models.CharField(max_length=2)

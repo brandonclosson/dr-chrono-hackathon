@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 {% block body %}
-<div class="row">
+<div class="row my-4">
     <div class="column col-md-12">
         <h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
     </div>
 </div>
-<div class="row">
+<div class="row my-4">
+    <div class="column col-md-12">
+        <a href="{% url 'welcome' %}"><button class="btn btn-primary">Back to Dashboard</button></a>
+    </div>
+</div>
+<div class="row my-4">
     <div class="column col-md-12">
         <h2>Patient List</h2>
     </div>
@@ -18,6 +23,8 @@
               <th scope="col">First</th>
               <th scope="col">Middle</th>
               <th scope="col">Last</th>
+              <th scope="col">Date of Birth</th>
+              <th scope="col">Gender</th>
               <th scpoe="col"></th>
             </tr>
           </thead>
@@ -27,6 +34,8 @@
               <td>{{ patient.first_name }}</td>
               <td>{% if patient.middle_name %}{{ patient.middle_name }}{% else %}{% endif %}</td>
               <td>{{ patient.last_name }}</td>
+              <td>{{ patient.date_of_birth }}</td>
+              <td>{{ patient.gender }}</td>
               <td><a href="{% url 'patient_detail' pk=patient.pk %}">View Details</a></td>
             </tr>
             {% endfor %}

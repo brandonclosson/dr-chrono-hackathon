@@ -22,7 +22,7 @@
       <td>{{ appointment.wait_time }} minutes</td>
       <td>{{ appointment.exam_room }}</td>
       <td>{{ appointment.reason }}</td>
-      <td><button class="btn btn-primary update-status-button" data-id="{{ appointment.pk }}" data-status="Complete">Finish</button></td>
+      <td><button class="btn btn-primary btn-sm update-status-button" data-id="{{ appointment.pk }}" data-status="Complete">Finish</button></td>
     </tr>
     {% endfor %}
   </tbody>

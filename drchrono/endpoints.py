@@ -213,6 +213,7 @@ class PatientEndpoint(BaseEndpoint):
                     "gender": patient["gender"],
                     "ethnicity": patient["ethnicity"],
                     "social_security_number": patient["social_security_number"],
+                    "date_of_birth": patient["date_of_birth"],
                 },
             )
             saved_patients.append(patient)
