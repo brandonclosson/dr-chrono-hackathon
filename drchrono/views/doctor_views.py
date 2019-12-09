@@ -33,8 +33,6 @@ class DoctorWelcome(LoginRequiredMixin, TemplateView):
         access_token = self.get_token()
         api = DoctorEndpoint(access_token)
         self.request.session["access_token"] = access_token
-        # Grab the first doctor from the list; normally this would be the whole practice
-        # group, but your hackathon account probably only has one doctor in it.
         return api.save_doctor()
 
     def get_today_appointments(self, doctor_id):

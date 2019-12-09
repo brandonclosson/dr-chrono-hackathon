@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block navbar %}
+    {{ block.super }}
+{% endblock %}
 {% block body %}
 <div class="row py-4">
     <div class="column col-md-12">
@@ -7,17 +10,17 @@
 </div>
 <div class="row py-2">
     <div class="column col-md-12">
-        <a href="{% url 'appointments' %}" class="btn btn-primary btn-lg btn-block">Appointments</a>
+        <a href="{% url 'appointments' %}" class="btn btn-primary btn-lg btn-block">View Today's Appointments</a>
     </div>
 </div>
 <div class="row py-2">
     <div class="column col-md-12">
-        <a href="{% url 'patients' %}" class="btn btn-primary btn-lg btn-block">Patients</a>
+        <a href="{% url 'patients' %}" class="btn btn-primary btn-lg btn-block">View Patients</a>
     </div>
 </div>
 <div class="row py-2">
     <div class="column col-md-12">
-        <a href="{% url 'kiosk' %}" class="btn btn-primary btn-lg btn-block">Kiosk</a>
+        <a href="{% url 'kiosk' %}" class="btn btn-primary btn-lg btn-block">Go to Kiosk</a>
     </div>
 </div>
 {% endblock %}
