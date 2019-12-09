@@ -17,7 +17,6 @@ class PatientSignInForm(forms.Form):
 
 class PatientDemographicsForm(forms.ModelForm):
     state = USStateField(widget=USStateSelect)
-    email = forms.EmailField()
 
     class Meta:
         model = Patient

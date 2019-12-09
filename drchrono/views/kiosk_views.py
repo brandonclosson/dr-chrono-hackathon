@@ -64,7 +64,7 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
     model_class = Patient
     success_url = "/check-in-success/"
     template_name = "patient_demographics.html"
-    fields = ["first_name", "last_name", "address", "city", "state", "zip_code"]
+    form_class = PatientDemographicsForm
 
     def form_valid(self, form):
         patients_api = PatientEndpoint(self.request.session["access_token"])
