@@ -79,7 +79,7 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
         appointments_api = AppointmentEndpoint(self.request.session["access_token"])
         for appointment_id in self.request.session["appointment_ids"]:
             try:
-                appointments_api.update(appointment_id, {"status": "Checked In"})
+                appointments_api.update(appointment_id, {"status": "Arrived"})
             except APIException:
                 return render(
                     self.request,
@@ -90,7 +90,7 @@ class PatientDemographicsView(LoginRequiredMixin, UpdateView):
                     },
                 )
             appointment = Appointment.objects.get(api_id=appointment_id)
-            appointment.status = "Checked In"
+            appointment.status = "Arrived"
             appointment.check_in_time = timezone.now()
             appointment.save()
         return super(PatientDemographicsView, self).form_valid(form)

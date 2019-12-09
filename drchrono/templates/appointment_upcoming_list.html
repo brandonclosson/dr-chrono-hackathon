@@ -27,7 +27,7 @@
       <td>{{ appointment.reason }}</td>
       <td>{% if appointment.wait_time %}{{ appointment.wait_time }} minutes{% endif %}</td>
       <td>
-        {% if appointment.status == 'Checked In' %}
+        {% if appointment.status == 'Arrived' %}
           <button class="btn btn-primary update-status-button btn-sm" data-id="{{ appointment.pk }}" data-status="In Room">
             See Now
           </button>

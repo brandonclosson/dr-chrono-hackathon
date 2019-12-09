@@ -54,7 +54,7 @@ class Appointment(models.Model):
     def wait_time(self):
         if self.final_wait_time:
             return self.final_wait_time
-        elif self.status == "Checked In":
+        elif self.status == "Arrived":
             td = timezone.now() - self.check_in_time
             return td.seconds / 60
         return None
