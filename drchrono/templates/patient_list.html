@@ -5,17 +5,7 @@
 {% block body %}
 <div class="row my-4">
     <div class="column col-md-12">
-        <h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
-    </div>
-</div>
-<div class="row my-4">
-    <div class="column col-md-12">
-        <a href="{% url 'welcome' %}"><button class="btn btn-primary">Back to Dashboard</button></a>
-    </div>
-</div>
-<div class="row my-4">
-    <div class="column col-md-12">
-        <h2>Patient List</h2>
+        <h2>{{ doctor.first_name }} {{ doctor.last_name }}'s Patients</h2>
     </div>
 </div>
 <div class="row">
