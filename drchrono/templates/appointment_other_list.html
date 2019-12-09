@@ -21,8 +21,8 @@
       </td>
       <td>{{ appointment.scheduled_time }}</td>
       <td>{{ appointment.status }}</td>
-      <td>{{ appointment.check_in_time }}</td>
-      <td>{{ appointment.wait_time }} minutes</td>
+      <td>{% if appointment.check_in_time %}{{ appointment.check_in_time }}{% endif %}</td>
+      <td>{% if appointment.wait_time %}{{ appointment.wait_time }} minutes{% endif %}</td>
       <td>{{ appointment.exam_room }}</td>
       <td>{{ appointment.reason }}</td>
     </tr>

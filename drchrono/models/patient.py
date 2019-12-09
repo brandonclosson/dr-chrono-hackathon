@@ -19,3 +19,4 @@ class Patient(models.Model):
     gender = models.CharField(max_length=10, choices=PATIENT_GENDER_CHOICES)
     ethnicity = models.CharField(max_length=50)
     social_security_number = models.CharField(max_length=11, blank=True, null=True)
+    email = models.EmailField(blank=True)

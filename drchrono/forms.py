@@ -13,12 +13,12 @@ from drchrono.models import Patient
 class PatientSignInForm(forms.Form):
     first_name = forms.CharField(max_length=100, required=True)
     last_name = forms.CharField(max_length=100, required=True)
-    social = USSocialSecurityNumberField(required=False)
 
 
 class PatientDemographicsForm(forms.ModelForm):
     state = USStateField(widget=USStateSelect)
+    email = forms.EmailField()
 
     class Meta:
         model = Patient
-        fields = ["first_name", "last_name", "address", "city", "state", "zip_code"]
+        fields = ["first_name", "last_name", "address", "city", "state", "zip_code", "email"]

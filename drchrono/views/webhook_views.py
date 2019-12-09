@@ -89,6 +89,7 @@ def webhook_view(request):
                     "ethnicity": updated_patient["ethnicity"],
                     "social_security_number": updated_patient["social_security_number"],
                     "date_of_birth": updated_patient["date_of_birth"],
+                    "email": updated_patient["email"]
                 },
             )
         return JsonResponse({"status": "success"})
