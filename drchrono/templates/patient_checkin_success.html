@@ -7,21 +7,14 @@
 <div class="container">
     <div class="row my-4">
         <div class="column col-md-12 text-center">
-            <h1>Successfully Checked In</h1>
+            <h1>Thank you for checking in!</h1>
         </div>
     </div>
     <div class="row my-4">
         <div class="column col-md-12 text-center">
-            <h4 class="py-4">Today's Appointment(s):</h4>
-            <div class="row text-center">
-                {% for appointment in appointments %}
-                    <div class="col-md-4 pb-4">
-                        <p><strong>Time: </strong> {{ appointment.scheduled_time|time }}</p>
-                        <p><strong>Reason: </strong> {{ appointment.reason }}</p>
-                        <p><strong>Exam Room: </strong> {{ appointment.exam_rooom }}</p>
-                    </div>
-                {% endfor %}
-            </div>
+            <h4 class="py-4">
+                Your next appointment is scheduled for {{ appointments.0.scheduled_time|time }}
+            </h4>
         </div>
     </div>
 <div>

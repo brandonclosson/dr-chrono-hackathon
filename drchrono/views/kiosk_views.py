@@ -118,5 +118,5 @@ class PatientCheckInSuccessView(LoginRequiredMixin, TemplateView):
         kwargs = super(PatientCheckInSuccessView, self).get_context_data(**kwargs)
         kwargs["appointments"] = Appointment.objects.filter(
             api_id__in=self.request.session["appointment_ids"]
-        )
+        ).order_by('scheduled_time')
         return kwargs
