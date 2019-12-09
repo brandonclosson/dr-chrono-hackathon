@@ -25,7 +25,7 @@ SECRET_KEY = "=*l&a&rk7jmiw$3euke*z9lu-na!^j^i&ddejfik!ajqlaymmc"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '00c3ee48.ngrok.io']
 
 
 # Application definition
@@ -120,6 +120,8 @@ STATIC_URL = "/static/"
 SOCIAL_AUTH_DRCHRONO_KEY = os.getenv("SOCIAL_AUTH_CLIENT_ID")
 SOCIAL_AUTH_DRCHRONO_SECRET = os.getenv("SOCIAL_AUTH_SECRET")
 
+WEBHOOK_SECRET_TOKEN = os.getenv("WEBHOOK_SECRET_TOKEN")
+
 
 LOGIN_REDIRECT_URL = "/welcome/"
 LOGIN_URL = "login/drchrono"
@@ -135,6 +137,10 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": "debug.log",
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
         }
     },
     "loggers": {
@@ -142,6 +148,10 @@ LOGGING = {
             "handlers": ["file"],
             "level": "DEBUG",
             "propagate": True,
+        },
+        'drchrono.views': {
+            'handlers': ['console'],
+            'level': 'DEBUG'
         }
     },
 }

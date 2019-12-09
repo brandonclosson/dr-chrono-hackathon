@@ -12,3 +12,4 @@ from kiosk_views import (
 )
 from patient_views import PatientDetailView, PatientListView
 from setup_views import SetupView
+from webhook_views import webhook_view

@@ -45,5 +45,6 @@ urlpatterns = [
         name="patient_detail",
     ),
     url(r"^welcome/$", views.DoctorWelcome.as_view(), name="welcome"),
+    url(r"^webhooks/$", views.webhook_view, name="webhooks"),
     url(r"", include("social.apps.django_app.urls", namespace="social")),
 ]
